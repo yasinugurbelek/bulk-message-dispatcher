@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bulk-message-api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - bulk-message-network
+    depends_on:
+      - db
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    container_name: bulk-message-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d
+    networks:
+      - bulk-message-network
+
+  db:
+    image: mysql:8.0
+    container_name: bulk-message-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: bulk_message
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: password
+      MYSQL_USER: bulk-message
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - bulk-message-network
+
+  redis:
+    image: redis:alpine
+    container_name: bulk-message-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - bulk-message-network
+
+networks:
+  bulk-message-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

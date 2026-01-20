@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: Message Queue System API
+  version: 1.0.0
+  description: Bulk message sending system with queue processing
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Development Server
+
+paths:
+  /messages/sent:
+    get:
+      summary: Get list of sent messages
+      operationId: getSentMessages
+      tags:
+        - Messages
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Successfully retrieved sent messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        recipient:
+                          type: string
+                          example: "+905551111111"
+                        content:
+                          type: string
+                          example: "Insider - Project"
+                        status:
+                          type: string
+                          enum: [pending, sent, failed]
+                          example: "sent"
+                        external_message_id:
+                          type: string
+                          format: uuid
+                          example: "67f2f8a8-ea58-4ed0-a6f9-ff217df4d849"
+                        sent_at:
+                          type: string
+                          format: date-time
+                          example: "2024-01-19T10:30:00Z"
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 15
+                      total:
+                        type: integer
+                        example: 100
+                      last_page:
+                        type: integer
+                        example: 7
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient:
+          type: string
+        content:
+          type: string
+        status:
+          type: string
+          enum: [pending, sent, failed]
+        external_message_id:
+          type: string
+          format: uuid
+        sent_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

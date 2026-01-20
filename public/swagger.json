@@ -1,0 +1,36 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Bulk Message API",
+        "description": "Laravel 12 API Dokümantasyonu",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/messages/sent": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Gönderilen mesajları listele",
+                "operationId": "438d5b5198ad9a24182c8ef99b2c2d9b",
+                "responses": {
+                    "200": {
+                        "description": "Başarılı"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Messages",
+            "description": "Messages"
+        }
+    ]
+}
